@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTX Yersin - Quản Lý Gửi Xe</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Style bổ sung cho các nhãn trạng thái tiền xe */
+        .badge-paid { background-color: #d1fae5; color: #065f46; }
+        .badge-unpaid { background-color: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><h3>KTX ĐH YERSIN</h3></div>
+        <ul>
+            <li><a href="index.html">📊 Tổng Quan</a></li>
+            <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
+            <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
+            <li><a href="guixe.html" class="active">🏍️ Quản Lý Gửi Xe</a></li>
+            <li><a href="buukien.html">📦 Nhận Bưu Kiện</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h2>Quản Lý Phương Tiện & Vé Xe KTX</h2>
+            <p>Đăng ký vé xe tháng và theo dõi tình trạng đóng tiền giữ xe của sinh viên nội trú</p>
+        </div>
+
+        <div class="form-container">
+            <h3>Đăng ký thẻ xe tháng mới</h3>
+            <div style="margin-top: 15px;">
+                <div class="form-group" style="display: inline-block; margin-right: 15px; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Sinh Viên Chủ Xe</label>
+                    <select id="xe-mssv" style="width:230px !important;"></select>
+                </div>
+                <div class="form-group" style="display: inline-block; margin-right: 15px; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Loại Xe</label>
+                    <input type="text" id="loaiXe" placeholder="Ví dụ: Vision, Wave Alpha">
+                </div>
+                <div class="form-group" style="display: inline-block; margin-right: 15px; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Biển Số Xe</label>
+                    <input type="text" id="bienSo" placeholder="Ví dụ: 49M1-12345">
+                </div>
+                <div class="form-group" style="display: inline-block; margin-right: 15px; margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px;">Loại Vé / Giá Tiền</label>
+                    <select id="phiGui">
+                        <option value="50000">Xe Máy (50,000đ/tháng)</option>
+                        <option value="20000">Xe Đạp Điện (20,000đ/tháng)</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" onclick="themXe()">Đăng Ký Vé Xe</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h3>Danh sách xe đăng ký trong bãi KTX</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>MSSV</th>
+                        <th>Họ Tên Chủ Xe</th>
+                        <th>Loại Xe</th>
+                        <th>Biển Số</th>
+                        <th>Phí Tháng</th>
+                        <th>Tình Trạng Phí</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="xe-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/guixe.js"></script>
+</body>
+</html>

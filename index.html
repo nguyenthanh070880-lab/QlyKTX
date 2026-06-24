@@ -14,6 +14,8 @@
         .card-violation { border-left-color: #ef4444; }
         .card-bike { border-left-color: #06b6d4; }
         .card-parcel { border-left-color: #a855f7; }
+        .card-complaint { border-left-color: #f43f5e; }
+        .card-move { border-left-color: #14b8a6; }
         .card h3 { color: #64748b; font-size: 11px; text-transform: uppercase; margin-bottom: 10px; }
         .card p { font-size: 24px; font-weight: bold; color: #1e293b; }
         .welcome-box { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; }
@@ -33,13 +35,16 @@
             <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
             <li><a href="guixe.html">🏍️ Quản Lý Gửi Xe</a></li>
             <li><a href="buukien.html">📦 Nhận Bưu Kiện</a></li>
+            <li><a href="khieunai.html">💬 Ý Kiến & Khiếu Nại</a></li>
+            <li><a href="chuyenphong.html">🔄 Chuyển & Trả Phòng</a></li>
+            <li><a href="hethong.html">⚙️ Hệ Thống & Bảo Mật</a></li>
         </ul>
     </div>
 
     <div class="main-content">
         <div class="welcome-box">
             <h2>Hệ thống Quản lý KTX Đại học Yersin</h2>
-            <p style="margin-top: 5px; opacity: 0.9;">Hệ thống quản trị thông minh: Quản lý toàn diện đời sống, tài sản, phương tiện và an ninh nội trú.</p>
+            <p style="margin-top: 5px; opacity: 0.9;">Hệ thống quản trị thông minh: Quản lý toàn diện đời sống, tài sản, phương tiện, khiếu nại và bảo mật nội trú.</p>
         </div>
 
         <div class="header"><h2>Số Liệu Toàn Hệ Thống</h2></div>
@@ -52,6 +57,8 @@
             <div class="card card-violation"><h3>Vi Phạm</h3><p id="total-violations">0</p></div>
             <div class="card card-bike"><h3>Xe Đăng Ký</h3><p id="total-bikes">0</p></div>
             <div class="card card-parcel"><h3>Bưu Kiện Tồn</h3><p id="pending-parcels">0</p></div>
+            <div class="card card-complaint"><h3>Khiếu Nại Chưa Xử Lý</h3><p id="pending-complaints">0</p></div>
+            <div class="card card-move"><h3>Yêu Cầu Chuyển Phòng</h3><p id="pending-moves">0</p></div>
         </div>
 
         <div class="flex-container">
@@ -63,10 +70,10 @@
                 </table>
             </div>
             <div class="sub-table">
-                <h3>📦 Hàng mới về bốt bảo vệ (Chờ lấy)</h3>
+                <h3>💬 Khiếu nại/Góp ý mới nhất</h3>
                 <table>
-                    <thead><tr><th>Người Nhận</th><th>Phòng</th><th>Mã Vận Đơn</th></tr></thead>
-                    <tbody id="current-parcels"></tbody>
+                    <thead><tr><th>Phòng</th><th>Nội Dung</th><th>Trạng Thái</th></tr></thead>
+                    <tbody id="recent-complaints"></tbody>
                 </table>
             </div>
         </div>
@@ -74,6 +81,14 @@
 
     <script>
         window.onload = function() {
+            // Kiểm tra phân quyền đăng nhập trước khi xem trang chủ
+            const user = JSON.parse(sessionStorage.getItem("currentUser"));
+            if(!user) {
+                alert("Vui lòng đăng nhập hệ thống!");
+                window.location.href = "hethong.html";
+                return;
+            }
+
             const sv = JSON.parse(localStorage.getItem("sinhVienData")) || [];
             const phong = JSON.parse(localStorage.getItem("phongData")) || [];
             const hoadon = JSON.parse(localStorage.getItem("hoaDonData")) || [];
@@ -81,8 +96,10 @@
             const kyluat = JSON.parse(localStorage.getItem("kyLuatData")) || [];
             const xe = JSON.parse(localStorage.getItem("guiXeData")) || [];
             const buukien = JSON.parse(localStorage.getItem("buuKienData")) || [];
+            const khieunai = JSON.parse(localStorage.getItem("khieuNaiData")) || [];
+            const chuyenphong = JSON.parse(localStorage.getItem("chuyenPhongData")) || [];
 
-            // Gán số lượng lên các thẻ card
+            // Gán số lượng
             document.getElementById("total-students").innerText = sv.length;
             document.getElementById("total-rooms").innerText = phong.length;
             document.getElementById("unpaid-bills").innerText = hoadon.filter(b => b.trangThai === "Chưa thanh toán").length;
@@ -90,8 +107,10 @@
             document.getElementById("total-violations").innerText = kyluat.length;
             document.getElementById("total-bikes").innerText = xe.length;
             document.getElementById("pending-parcels").innerText = buukien.filter(p => p.trangThai === "Chờ lấy").length;
+            document.getElementById("pending-complaints").innerText = khieunai.filter(c => c.trangThai === "Chưa xử lý").length;
+            document.getElementById("pending-moves").innerText = chuyenphong.filter(m => m.trangThai === "Chờ duyệt").length;
 
-            // Hiển thị nhanh 3 sinh viên mới nhất
+            // Render 3 sinh viên mới nhất
             const recentSvBody = document.getElementById("recent-students");
             if(sv.length === 0) {
                 recentSvBody.innerHTML = "<tr><td colspan='3' style='text-align:center;color:#94a3b8;'>Chưa có sinh viên</td></tr>";
@@ -101,14 +120,13 @@
                 });
             }
 
-            // Hiển thị nhanh 3 bưu kiện đang chờ lấy
-            const parcelBody = document.getElementById("current-parcels");
-            const choLay = buukien.filter(p => p.trangThai === "Chờ lấy");
-            if(choLay.length === 0) {
-                parcelBody.innerHTML = "<tr><td colspan='3' style='text-align:center;color:#94a3b8;'>Không có bưu kiện tồn</td></tr>";
+            // Render 3 khiếu nại mới nhất
+            const complaintBody = document.getElementById("recent-complaints");
+            if(khieunai.length === 0) {
+                complaintBody.innerHTML = "<tr><td colspan='3' style='text-align:center;color:#94a3b8;'>Không có khiếu nại mới</td></tr>";
             } else {
-                choLay.slice(0, 3).forEach(p => {
-                    parcelBody.innerHTML += `<tr><td><b>${p.hoTen}</b></td><td>${p.maPhong}</td><td><code>${p.maVanDon}</code></td></tr>`;
+                khieunai.slice(-3).reverse().forEach(c => {
+                    complaintBody.innerHTML += `<tr><td><b>${c.maPhong}</b></td><td>${c.noiDung}</td><td><span style="color:${c.trangThai==='Chưa xử lý'?'#ef4444':'#10b981'}">${c.trangThai}</span></td></tr>`;
                 });
             }
         }

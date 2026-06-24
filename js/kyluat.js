@@ -1,6 +1,6 @@
 if (!localStorage.getItem("kyLuatData")) {
     const mauKL = [
-        { mssv: "2401010249", hoTen: "Đỗ Đặng Hữu Quốc", maPhong: "A102", ngay: "2026-03-15", loi: "Về muộn sau 23h" }
+        { mssv: "2401010006", hoTen: "Lê Văn A", maPhong: "A102", ngay: "2026-03-15", loi: "Về muộn sau 23h" }
     ];
     localStorage.setItem("kyLuatData", JSON.stringify(mauKL));
 }

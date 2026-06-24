@@ -1,11 +1,9 @@
-// Dữ liệu mẫu ban đầu nếu LocalStorage trống
 if (!localStorage.getItem("sinhVienData")) {
     const mauSV = [
-        { mssv: "2401010249", hoTen: "Đỗ Đặng Hữu Quốc", maPhong: "A102" }
+        { mssv: "2401010006", hoTen: "Lê Văn A", maPhong: "A102" }
     ];
     localStorage.setItem("sinhVienData", JSON.stringify(mauSV));
 }
-
 function getStudents() { return JSON.parse(localStorage.getItem("sinhVienData")) || []; }
 function getRooms() { return JSON.parse(localStorage.getItem("phongData")) || []; }
 
