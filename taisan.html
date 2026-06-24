@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTX Yersin - Cơ Sở Vật Chất</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .form-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .form-group { display: inline-block; margin-right: 15px; margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; width: 180px; }
+        .btn { padding: 9px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: #fff; background-color: #ec4899; }
+        .badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 13px; }
+        .badge-good { background-color: #d1fae5; color: #065f46; }
+        .badge-bad { background-color: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><h3>KTX ĐH YERSIN</h3></div>
+        <ul>
+            <li><a href="index.html">📊 Tổng Quan</a></li>
+            <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
+            <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html" class="active">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h2>Quản Lý Cơ Sở Vật Chất & Thiết Bị</h2>
+            <p>Theo dõi danh mục tài sản, trang thiết bị hư hỏng tại các phòng</p>
+        </div>
+        <div class="form-container">
+            <h3>Báo cáo tình trạng thiết bị</h3>
+            <div style="margin-top: 15px;">
+                <div class="form-group"><label>Chọn Phòng</label><select id="asset-maPhong"></select></div>
+                <div class="form-group"><label>Tên Thiết Bị</label><input type="text" id="tenThietBi" placeholder="Ví dụ: Bóng đèn chữ U, Quạt trần"></div>
+                <div class="form-group"><label>Số Lượng</label><input type="number" id="soLuongAsset" value="1" min="1"></div>
+                <div class="form-group">
+                    <label>Tình Trạng</label>
+                    <select id="tinhTrangAsset">
+                        <option value="Hoạt động tốt">Hoạt động tốt</option>
+                        <option value="Hỏng / Cần sửa">Hỏng / Cần sửa</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" onclick="themTaiSan()">Ghi Nhận</button>
+            </div>
+        </div>
+        <div class="table-container">
+            <h3>Danh sách thiết bị trong ký túc xá</h3>
+            <table>
+                <thead><tr><th>Mã Phòng</th><th>Tên Thiết Bị</th><th>Số Lượng</th><th>Tình Trạng</th><th>Hành động</th></tr></thead>
+                <tbody id="asset-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="js/taisan.js"></script>
+</body>
+</html>

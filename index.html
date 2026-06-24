@@ -6,30 +6,17 @@
     <title>KTX Yersin - Tổng Quan Hệ Thống</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid #2563eb;
-        }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 5px solid #2563eb; }
         .card-room { border-left-color: #10b981; }
         .card-bill { border-left-color: #f59e0b; }
-        .card h3 { color: #64748b; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
-        .card p { font-size: 28px; font-weight: bold; color: #1e293b; }
-        .welcome-box {
-            background: linear-gradient(135deg, #1e3a8a, #2563eb);
-            color: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-        }
+        .card-asset { border-left-color: #ec4899; }
+        .card-violation { border-left-color: #ef4444; }
+        .card h3 { color: #64748b; font-size: 12px; text-transform: uppercase; margin-bottom: 10px; }
+        .card p { font-size: 26px; font-weight: bold; color: #1e293b; }
+        .welcome-box { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; }
+        .flex-container { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+        .sub-table { flex: 1; min-width: 300px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -40,26 +27,37 @@
             <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
             <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
             <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
         </ul>
     </div>
     <div class="main-content">
         <div class="welcome-box">
-            <h2>Chào mừng đến với Hệ thống Quản lý KTX Đại học Yersin</h2>
-            <p style="margin-top: 10px; opacity: 0.9;">Hệ thống hỗ trợ theo dõi sinh viên nội trú, tình trạng phòng ở và lập hóa đơn nhanh chóng.</p>
+            <h2>Hệ thống Quản lý KTX Đại học Yersin</h2>
+            <p style="margin-top: 5px; opacity: 0.9;">Phiên bản nâng cấp: Tích hợp quản lý tài sản cơ sở vật chất và nề nếp sinh viên.</p>
         </div>
-        <div class="header"><h2>Số Liệu Thống Kê Nhanh</h2></div>
+        <div class="header"><h2>Số Liệu Toàn Hệ Thống</h2></div>
         <div class="dashboard-grid">
-            <div class="card">
-                <h3>Tổng số sinh viên</h3>
-                <p id="total-students">0</p>
+            <div class="card"><h3>Sinh Viên</h3><p id="total-students">0</p></div>
+            <div class="card card-room"><h3>Tổng Số Phòng</h3><p id="total-rooms">0</p></div>
+            <div class="card card-bill"><h3>Hóa Đơn Treo</h3><p id="unpaid-bills">0</p></div>
+            <div class="card card-asset"><h3>Thiết Bị Hư Hỏng</h3><p id="broken-assets">0</p></div>
+            <div class="card card-violation"><h3>Số Ca Vi Phạm</h3><p id="total-violations">0</p></div>
+        </div>
+        <div class="flex-container">
+            <div class="sub-table">
+                <h3>🔔 Sinh viên mới thêm gần đây</h3>
+                <table>
+                    <thead><tr><th>MSSV</th><th>Họ Tên</th><th>Phòng</th></tr></thead>
+                    <tbody id="recent-students"></tbody>
+                </table>
             </div>
-            <div class="card card-room">
-                <h3>Tổng số phòng</h3>
-                <p id="total-rooms">0</p>
-            </div>
-            <div class="card card-bill">
-                <h3>Hóa đơn chưa thu</h3>
-                <p id="unpaid-bills">0</p>
+            <div class="sub-table">
+                <h3>⚠️ Thiết bị cần sửa gấp</h3>
+                <table>
+                    <thead><tr><th>Phòng</th><th>Thiết Bị</th><th>Tình Trạng</th></tr></thead>
+                    <tbody id="recent-assets"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -68,9 +66,28 @@
             const sv = JSON.parse(localStorage.getItem("sinhVienData")) || [];
             const phong = JSON.parse(localStorage.getItem("phongData")) || [];
             const hoadon = JSON.parse(localStorage.getItem("hoaDonData")) || [];
+            const taisan = JSON.parse(localStorage.getItem("taiSanData")) || [];
+            const kyluat = JSON.parse(localStorage.getItem("kyLuatData")) || [];
+
             document.getElementById("total-students").innerText = sv.length;
             document.getElementById("total-rooms").innerText = phong.length;
             document.getElementById("unpaid-bills").innerText = hoadon.filter(b => b.trangThai === "Chưa thanh toán").length;
+            document.getElementById("broken-assets").innerText = taisan.filter(t => t.tinhTrang === "Hỏng / Cần sửa").length;
+            document.getElementById("total-violations").innerText = kyluat.length;
+
+            // Hiển thị 3 sinh viên mới nhất
+            const recentSvBody = document.getElementById("recent-students");
+            sv.slice(-3).reverse().forEach(s => {
+                recentSvBody.innerHTML += `<tr><td>${s.mssv}</td><td>${s.hoTen}</td><td><b>${s.maPhong}</b></td></tr>`;
+            });
+
+            // Hiển thị thiết bị hỏng
+            const recentAssetBody = document.getElementById("recent-assets");
+            const hongs = taisan.filter(t => t.tinhTrang === "Hỏng / Cần sửa");
+            if(hongs.length === 0) recentAssetBody.innerHTML = "<tr><td colspan='3' style='text-align:center;color:#94a3b8;'>Thiết bị ổn định</td></tr>";
+            hongs.slice(0, 3).forEach(t => {
+                recentAssetBody.innerHTML += `<tr><td><b>${t.maPhong}</b></td><td>${t.tenThietBi}</td><td style='color:red;'>${t.tinhTrang}</td></tr>`;
+            });
         }
     </script>
 </body>
