@@ -1,31 +1,41 @@
 if (!localStorage.getItem("phongData")) {
     const danhSachPhongMau = [
-        { maPhong: "A101", loaiPhong: "6 Giường", soNguoi: 6, trangThai: "Đã đầy" },
-        { maPhong: "A102", loaiPhong: "6 Giường", soNguoi: 4, trangThai: "Còn trống" },
-        { maPhong: "B201", loaiPhong: "4 Giường", soNguoi: 2, trangThai: "Còn trống" }
+        { maPhong: "A101", loaiPhong: "6 Giường" },
+        { maPhong: "A102", loaiPhong: "6 Giường" },
+        { maPhong: "B201", loaiPhong: "4 Giường" }
     ];
     localStorage.setItem("phongData", JSON.stringify(danhSachPhongMau));
 }
 
-function getRooms() {
-    return JSON.parse(localStorage.getItem("phongData")) || [];
-}
+function getRooms() { return JSON.parse(localStorage.getItem("phongData")) || []; }
+function getStudents() { return JSON.parse(localStorage.getItem("sinhVienData")) || []; }
 
 function renderRooms() {
     const roomTableBody = document.getElementById("room-table-body");
     if (!roomTableBody) return;
 
     const rooms = getRooms();
+    const students = getStudents();
     roomTableBody.innerHTML = "";
 
     rooms.forEach(room => {
-        const statusClass = room.trangThai === "Còn trống" ? "badge-success" : "badge-danger";
+        // TỰ ĐỘNG ĐẾM SỐ SINH VIÊN THUỘC PHÒNG NÀY
+        const soNguoiThucTe = students.filter(sv => sv.maPhong === room.maPhong).length;
+        const sucChuaToiDa = parseInt(room.loaiPhong) || 6;
+
+        let trangThai = "Còn trống";
+        let statusClass = "badge-success";
+        if (soNguoiThucTe >= sucChuaToiDa) {
+            trangThai = "Đã đầy";
+            statusClass = "badge-danger";
+        }
+
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><b>${room.maPhong}</b></td>
             <td>${room.loaiPhong}</td>
-            <td>${room.soNguoi} thành viên</td>
-            <td><span class="badge ${statusClass}">${room.trangThai}</span></td>
+            <td><b style="color: #2563eb;">${soNguoiThucTe}</b> / ${sucChuaToiDa} thành viên</td>
+            <td><span class="badge ${statusClass}">${trangThai}</span></td>
             <td><button class="btn btn-delete" onclick="xoaPhong('${room.maPhong}')">Xóa</button></td>
         `;
         roomTableBody.appendChild(row);
@@ -35,8 +45,6 @@ function renderRooms() {
 function themPhong() {
     const maPhong = document.getElementById("maPhong").value.trim().toUpperCase();
     const loaiPhong = document.getElementById("loaiPhong").value;
-    const soNguoi = document.getElementById("soNguoi").value;
-    const trangThai = document.getElementById("trangThai").value;
 
     if (!maPhong) {
         alert("Vui lòng nhập mã phòng!");
@@ -49,9 +57,8 @@ function themPhong() {
         return;
     }
 
-    rooms.push({ maPhong, loaiPhong, soNguoi, trangThai });
+    rooms.push({ maPhong, loaiPhong });
     localStorage.setItem("phongData", JSON.stringify(rooms));
-    
     document.getElementById("maPhong").value = "";
     renderRooms();
     alert("Thêm phòng thành công!");
@@ -65,6 +72,4 @@ function xoaPhong(maPhong) {
     }
 }
 
-window.onload = function() {
-    renderRooms();
-};
+window.onload = function() { renderRooms(); };

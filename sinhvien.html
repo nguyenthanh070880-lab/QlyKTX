@@ -49,17 +49,13 @@
                 </div>
                 <div class="form-group">
                     <label>Xếp vào Phòng</label>
-                    <select id="maPhong">
-                        <option value="A101">A101</option>
-                        <option value="A102">A102</option>
-                        <option value="B201">B201</option>
-                    </select>
+                    <select id="maPhong"></select>
                 </div>
                 <button type="button" class="btn btn-add" onclick="themSinhVien()">Thêm Sinh Viên</button>
             </div>
         </div>
         <div class="table-container">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <h3>Danh sách sinh viên hiện tại</h3>
                 <input type="text" id="search-input" class="search-box" oninput="timKiemSinhVien(this.value)" placeholder="🔍 Tìm kiếm theo tên hoặc MSSV...">
             </div>

@@ -10,6 +10,19 @@ function getStudents() {
     return JSON.parse(localStorage.getItem("sinhVienData")) || [];
 }
 
+// Tự động load danh sách phòng vào ô Select để chọn
+function loadRoomSelect() {
+    const selectPhong = document.getElementById("maPhong");
+    if (!selectPhong) return;
+    const phongData = JSON.parse(localStorage.getItem("phongData")) || [
+        { maPhong: "A101" }, { maPhong: "A102" }, { maPhong: "B201" }
+    ];
+    selectPhong.innerHTML = "";
+    phongData.forEach(p => {
+        selectPhong.innerHTML += `<option value="${p.maPhong}">${p.maPhong}</option>`;
+    });
+}
+
 function renderStudents(filterText = "") {
     const studentTableBody = document.getElementById("student-table-body");
     if (!studentTableBody) return;
@@ -67,9 +80,7 @@ function themSinhVien() {
     alert("Thêm sinh viên mới thành công!");
 }
 
-function timKiemSinhVien(val) {
-    renderStudents(val);
-}
+function timKiemSinhVien(val) { renderStudents(val); }
 
 function deleteStudent(mssv) {
     if (confirm(`Xóa sinh viên ${mssv}?`)) {
@@ -80,5 +91,6 @@ function deleteStudent(mssv) {
 }
 
 window.onload = function() {
+    loadRoomSelect();
     renderStudents();
 };

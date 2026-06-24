@@ -6,8 +6,18 @@ if (!localStorage.getItem("hoaDonData")) {
     localStorage.setItem("hoaDonData", JSON.stringify(danhSachHDMau));
 }
 
-function getBills() {
-    return JSON.parse(localStorage.getItem("hoaDonData")) || [];
+function getBills() { return JSON.parse(localStorage.getItem("hoaDonData")) || []; }
+
+function loadBillRoomSelect() {
+    const selectPhong = document.getElementById("bill-maPhong");
+    if (!selectPhong) return;
+    const phongData = JSON.parse(localStorage.getItem("phongData")) || [
+        { maPhong: "A101" }, { maPhong: "A102" }, { maPhong: "B201" }
+    ];
+    selectPhong.innerHTML = "";
+    phongData.forEach(p => {
+        selectPhong.innerHTML += `<option value="${p.maPhong}">${p.maPhong}</option>`;
+    });
 }
 
 function renderBills() {
@@ -75,5 +85,6 @@ function payBill(index) {
 }
 
 window.onload = function() {
+    loadBillRoomSelect();
     renderBills();
 };
