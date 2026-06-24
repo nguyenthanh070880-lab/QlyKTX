@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTX Yersin - Quản Lý Bưu Kiện</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .form-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .form-group { display: inline-block; margin-right: 15px; margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; width: 180px; }
+        .btn { padding: 9px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: #fff; background-color: #a855f7; }
+        .badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 13px; }
+        .badge-waiting { background-color: #fef3c7; color: #d97706; }
+        .badge-done { background-color: #d1fae5; color: #065f46; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><h3>KTX ĐH YERSIN</h3></div>
+        <ul>
+            <li><a href="index.html">📊 Tổng Quan</a></li>
+            <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
+            <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
+            <li><a href="guixe.html">🏍️ Quản Lý Gửi Xe</a></li>
+            <li><a href="buukien.html" class="active">📦 Nhận Bưu Kiện</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h2>Quản Lý Bưu Kiện & Hàng Ship Hộ</h2>
+            <p>Ghi nhận hàng hóa từ đơn vị vận chuyển gửi tại bốt bảo vệ KTX</p>
+        </div>
+        <div class="form-container">
+            <h3>Khai báo bưu kiện mới đến</h3>
+            <div style="margin-top: 15px;">
+                <div class="form-group"><label>Sinh Viên Nhận</label><select id="bk-mssv" style="width:230px !important;"></select></div>
+                <div class="form-group"><label>Mã Vận Đơn / Ghi Chú</label><input type="text" id="maVanDon" placeholder="VD: SPX123456, Thùng nước"></div>
+                <div class="form-group"><label>Đơn Vị Vận Chuyển</label>
+                    <select id="donViVc">
+                        <option value="Shopee Xpress">Shopee Xpress</option>
+                        <option value="Lazada Logistics">Lazada Logistics</option>
+                        <option value="Giao Hàng Tiết Kiệm">Giao Hàng Tiết Kiệm</option>
+                        <option value="Grab / Gojek">Grab / Gojek (Đồ ăn)</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" onclick="themBuuKien()">Khai Báo Nhận Hộ</button>
+            </div>
+        </div>
+        <div class="table-container">
+            <h3>Kho bưu kiện ký gửi bảo vệ</h3>
+            <table>
+                <thead><tr><th>MSSV</th><th>Họ Tên Sinh Viên</th><th>Phòng</th><th>Mã Vận Đơn</th><th>Đơn Vị VC</th><th>Trạng Thái</th><th>Hành động</th></tr></thead>
+                <tbody id="bk-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="js/buukien.js"></script>
+</body>
+</html>

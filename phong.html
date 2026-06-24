@@ -5,19 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KTX Yersin - Quản Lý Phòng Ở</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .form-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 25px; }
-        .form-group { display: inline-block; margin-right: 15px; margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
-        .form-group input, .form-group select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; width: 200px; }
-        .btn { padding: 9px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: #fff; }
-        .btn-add { background-color: #10b981; }
-        .btn-add:hover { background-color: #059669; }
-        .btn-delete { background-color: #ef4444; padding: 5px 10px; font-size: 12px; }
-        .badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 13px; }
-        .badge-success { background-color: #d1fae5; color: #065f46; }
-        .badge-danger { background-color: #fee2e2; color: #991b1b; }
-    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -27,38 +14,33 @@
             <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
             <li><a href="phong.html" class="active">🏢 Quản Lý Phòng Ở</a></li>
             <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
+            <li><a href="guixe.html">🏍️ Quản Lý Gửi Xe</a></li>
+            <li><a href="buukien.html">📦 Nhận Bưu Kiện</a></li>
         </ul>
     </div>
     <div class="main-content">
         <div class="header">
-            <h2>Quản Lý Danh Sách Phòng Ở</h2>
-            <p>Thêm phòng mới và theo dõi số lượng thành viên tự động</p>
+            <h2>Danh Sách Phòng Ký Túc Xá</h2>
+            <p>Theo dõi tình trạng chỗ trống và loại phòng</p>
         </div>
-        <div class="form-container">
-            <h3>Thêm phòng mới vào hệ thống</h3>
-            <div style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>Mã Số Phòng</label>
-                    <input type="text" id="maPhong" placeholder="Ví dụ: A103">
-                </div>
-                <div class="form-group">
-                    <label>Loại Phòng</label>
-                    <select id="loaiPhong">
-                        <option value="4 Giường">4 Giường</option>
-                        <option value="6 Giường">6 Giường</option>
-                        <option value="8 Giường">8 Giường</option>
-                    </select>
-                </div>
-                <button type="button" class="btn btn-add" onclick="themPhong()">Thêm Phòng</button>
+        <div class="form-container" style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom:25px;">
+            <h3>Thêm phòng mới</h3>
+            <div style="margin-top:15px; display:flex; flex-wrap:wrap; gap:15px;">
+                <input type="text" id="p-maPhong" placeholder="Mã phòng (VD: A103)" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:180px;">
+                <select id="p-loaiPhong" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:150px;">
+                    <option value="4 Giường">4 Giường</option>
+                    <option value="6 Giường">6 Giường</option>
+                    <option value="8 Giường">8 Giường</option>
+                </select>
+                <button class="btn" onclick="themPhong()" style="padding:9px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; color:#fff; background-color:#10b981;">Thêm Phòng</button>
             </div>
         </div>
         <div class="table-container">
-            <h3>Danh sách phòng ở ký túc xá</h3>
             <table>
-                <thead>
-                    <tr><th>Mã Phòng</th><th>Loại Phòng</th><th>Số Thành Viên</th><th>Trạng Thái</th><th>Hành động</th></tr>
-                </thead>
-                <tbody id="room-table-body"></tbody>
+                <thead><tr><th>Mã Phòng</th><th>Loại Phòng</th><th>Sức Chứa</th><th>Hành Động</th></tr></thead>
+                <tbody id="phong-table-body"></tbody>
             </table>
         </div>
     </div>

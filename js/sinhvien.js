@@ -1,96 +1,79 @@
+// Dữ liệu mẫu ban đầu nếu LocalStorage trống
 if (!localStorage.getItem("sinhVienData")) {
-    const danhSachSVMau = [
-        { mssv: "2401010406", hoTen: "Đinh Trọng Tâm", lop: "CNTT-K21", maPhong: "A102" },
-        { mssv: "2401010460", hoTen: "Lê Văn Thứ", lop: "CNTT-K21", maPhong: "A102" }
+    const mauSV = [
+        { mssv: "2401010249", hoTen: "Đỗ Đặng Hữu Quốc", maPhong: "A102" }
     ];
-    localStorage.setItem("sinhVienData", JSON.stringify(danhSachSVMau));
+    localStorage.setItem("sinhVienData", JSON.stringify(mauSV));
 }
 
-function getStudents() {
-    return JSON.parse(localStorage.getItem("sinhVienData")) || [];
-}
+function getStudents() { return JSON.parse(localStorage.getItem("sinhVienData")) || []; }
+function getRooms() { return JSON.parse(localStorage.getItem("phongData")) || []; }
 
-// Tự động load danh sách phòng vào ô Select để chọn
-function loadRoomSelect() {
-    const selectPhong = document.getElementById("maPhong");
-    if (!selectPhong) return;
-    const phongData = JSON.parse(localStorage.getItem("phongData")) || [
-        { maPhong: "A101" }, { maPhong: "A102" }, { maPhong: "B201" }
-    ];
-    selectPhong.innerHTML = "";
-    phongData.forEach(p => {
-        selectPhong.innerHTML += `<option value="${p.maPhong}">${p.maPhong}</option>`;
+// Đổ danh sách phòng vào ô Select để chọn khi thêm sinh viên
+function loadRoomsToSelect() {
+    const select = document.getElementById("sv-phong");
+    if (!select) return;
+    const rooms = getRooms();
+    select.innerHTML = "";
+    if (rooms.length === 0) {
+        select.innerHTML = `<option value="">Chưa có phòng</option>`;
+        return;
+    }
+    rooms.forEach(r => {
+        select.innerHTML += `<option value="${r.maPhong}">${r.maPhong}</option>`;
     });
 }
 
-function renderStudents(filterText = "") {
-    const studentTableBody = document.getElementById("student-table-body");
-    if (!studentTableBody) return;
-    
-    const students = getStudents();
-    studentTableBody.innerHTML = "";
+function renderStudents() {
+    const body = document.getElementById("sv-table-body");
+    if (!body) return;
+    body.innerHTML = "";
+    const list = getStudents();
 
-    const filtered = students.filter(sv => 
-        sv.hoTen.toLowerCase().includes(filterText.toLowerCase()) || sv.mssv.includes(filterText)
-    );
-
-    if (filtered.length === 0) {
-        studentTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #94a3b8;">Không tìm thấy sinh viên nào</td></tr>`;
+    if (list.length === 0) {
+        body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Danh sách sinh viên trống</td></tr>`;
         return;
     }
 
-    filtered.forEach(sv => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td><b>${sv.mssv}</b></td>
-            <td>${sv.hoTen}</td>
-            <td>${sv.lop}</td>
-            <td><span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-weight: bold;">${sv.maPhong}</span></td>
-            <td><button class="btn btn-delete" onclick="deleteStudent('${sv.mssv}')">Xóa</button></td>
-        `;
-        studentTableBody.appendChild(row);
+    list.forEach((s, idx) => {
+        body.innerHTML += `
+            <tr>
+                <td>${s.mssv}</td>
+                <td><b>${s.hoTen}</b></td>
+                <td><span style="background:#dbeafe; color:#1e40af; padding:3px 6px; border-radius:4px; font-weight:bold;">${s.maPhong}</span></td>
+                <td>
+                    <button class="btn" style="background:#ef4444; padding:4px 8px; font-size:11px;" onclick="xoaSinhVien(${idx})">Xóa</button>
+                </td>
+            </tr>`;
     });
 }
 
 function themSinhVien() {
-    const mssv = document.getElementById("mssv").value.trim();
-    const hoTen = document.getElementById("hoTen").value.trim();
-    const lop = document.getElementById("lop").value.trim();
-    const maPhong = document.getElementById("maPhong").value;
+    const mssv = document.getElementById("sv-mssv").value.trim();
+    const hoTen = document.getElementById("sv-hoTen").value.trim();
+    const maPhong = document.getElementById("sv-phong").value;
 
-    if (!mssv || !hoTen || !lop) {
-        alert("Vui lòng nhập đầy đủ thông tin!");
-        return;
-    }
+    if (!mssv || !hoTen || !maPhong) { alert("Vui lòng điền đầy đủ thông tin!"); return; }
 
-    const students = getStudents();
-    if (students.some(sv => sv.mssv === mssv)) {
-        alert("MSSV này đã tồn tại!");
-        return;
-    }
+    const list = getStudents();
+    // Kiểm tra trùng MSSV
+    if (list.some(s => s.mssv === mssv)) { alert("Mã số sinh viên này đã tồn tại!"); return; }
 
-    students.push({ mssv, hoTen, lop, maPhong });
-    localStorage.setItem("sinhVienData", JSON.stringify(students));
-    
-    document.getElementById("mssv").value = "";
-    document.getElementById("hoTen").value = "";
-    document.getElementById("lop").value = "";
-    
+    list.push({ mssv, hoTen, maPhong });
+    localStorage.setItem("sinhVienData", JSON.stringify(list));
+
+    document.getElementById("sv-mssv").value = "";
+    document.getElementById("sv-hoTen").value = "";
     renderStudents();
-    alert("Thêm sinh viên mới thành công!");
+    alert("Thêm sinh viên thành công!");
 }
 
-function timKiemSinhVien(val) { renderStudents(val); }
-
-function deleteStudent(mssv) {
-    if (confirm(`Xóa sinh viên ${mssv}?`)) {
-        let students = getStudents().filter(sv => sv.mssv !== mssv);
-        localStorage.setItem("sinhVienData", JSON.stringify(students));
+function xoaSinhVien(idx) {
+    if (confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) {
+        const list = getStudents().filter((_, i) => i !== idx);
+        localStorage.setItem("sinhVienData", JSON.stringify(list));
         renderStudents();
     }
 }
 
-window.onload = function() {
-    loadRoomSelect();
-    renderStudents();
-};
+window.onload = function() { loadRoomsToSelect(); renderStudents(); }

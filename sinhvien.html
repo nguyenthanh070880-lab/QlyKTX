@@ -5,17 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KTX Yersin - Quản Lý Sinh Viên</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .form-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 25px; }
-        .form-group { display: inline-block; margin-right: 15px; margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
-        .form-group input, .form-group select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; width: 200px; }
-        .btn { padding: 9px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: #fff; }
-        .btn-add { background-color: #2563eb; }
-        .btn-add:hover { background-color: #1d4ed8; }
-        .btn-delete { background-color: #ef4444; padding: 5px 10px; font-size: 12px; }
-        .search-box { margin-bottom: 15px; padding: 8px 12px; width: 300px; border: 1px solid #cbd5e1; border-radius: 4px; }
-    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -25,45 +14,30 @@
             <li><a href="sinhvien.html" class="active">👥 Quản Lý Sinh Viên</a></li>
             <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
             <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
+            <li><a href="guixe.html">🏍️ Quản Lý Gửi Xe</a></li>
+            <li><a href="buukien.html">📦 Nhận Bưu Kiện</a></li>
         </ul>
     </div>
     <div class="main-content">
         <div class="header">
-            <h2>Quản Lý Sinh Viên Nội Trú</h2>
-            <p>Thêm mới, tìm kiếm và sắp xếp chỗ ở cho sinh viên</p>
+            <h2>Hồ Sơ Sinh Viên Nội Trú</h2>
+            <p>Thêm mới, sửa đổi thông tin và xếp phòng cho sinh viên</p>
         </div>
-        <div class="form-container">
-            <h3>Nhập thông tin sinh viên</h3>
-            <div style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>Mã số sinh viên (MSSV)</label>
-                    <input type="text" id="mssv" placeholder="Ví dụ: 2401010249">
-                </div>
-                <div class="form-group">
-                    <label>Họ và Tên</label>
-                    <input type="text" id="hoTen" placeholder="Nhập họ tên">
-                </div>
-                <div class="form-group">
-                    <label>Lớp</label>
-                    <input type="text" id="lop" placeholder="Ví dụ: CNTT-K21">
-                </div>
-                <div class="form-group">
-                    <label>Xếp vào Phòng</label>
-                    <select id="maPhong"></select>
-                </div>
-                <button type="button" class="btn btn-add" onclick="themSinhVien()">Thêm Sinh Viên</button>
+        <div class="form-container" style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom:25px;">
+            <h3>Đăng ký sinh viên mới</h3>
+            <div style="margin-top:15px; display:flex; flex-wrap:wrap; gap:15px;">
+                <input type="text" id="sv-mssv" placeholder="Mã số sinh viên" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:180px;">
+                <input type="text" id="sv-hoTen" placeholder="Họ và tên" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:220px;">
+                <select id="sv-phong" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:150px;"></select>
+                <button class="btn" onclick="themSinhVien()" style="padding:9px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; color:#fff; background-color:#2563eb;">Thêm Sinh Viên</button>
             </div>
         </div>
         <div class="table-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <h3>Danh sách sinh viên hiện tại</h3>
-                <input type="text" id="search-input" class="search-box" oninput="timKiemSinhVien(this.value)" placeholder="🔍 Tìm kiếm theo tên hoặc MSSV...">
-            </div>
             <table>
-                <thead>
-                    <tr><th>MSSV</th><th>Họ và Tên</th><th>Lớp</th><th>Phòng Ở</th><th>Hành động</th></tr>
-                </thead>
-                <tbody id="student-table-body"></tbody>
+                <thead><tr><th>MSSV</th><th>Họ Tên</th><th>Phòng Ở</th><th>Hành Động</th></tr></thead>
+                <tbody id="sv-table-body"></tbody>
             </table>
         </div>
     </div>

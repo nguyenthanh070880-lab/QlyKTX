@@ -1,35 +1,49 @@
 if (!localStorage.getItem("kyLuatData")) {
     const mauKL = [
-        { mssv: "2401010249", hoTen: "Đỗ Đặng Hữu Quốc", maPhong: "A102", ngay: "2026-06-20", loi: "Về muộn sau 23h" }
+        { mssv: "2401010249", hoTen: "Đỗ Đặng Hữu Quốc", maPhong: "A102", ngay: "2026-03-15", loi: "Về muộn sau 23h" }
     ];
     localStorage.setItem("kyLuatData", JSON.stringify(mauKL));
 }
 
-function getKyLuat() { return JSON.parse(localStorage.getItem("kyLuatData")) || []; }
+function getViolations() { return JSON.parse(localStorage.getItem("kyLuatData")) || []; }
 
+// Đổ danh sách sinh viên vào ô Select để chọn khi lập biên bản
 function loadKlStudents() {
     const select = document.getElementById("kl-mssv");
-    if(!select) return;
+    if (!select) return;
     const students = JSON.parse(localStorage.getItem("sinhVienData")) || [];
     select.innerHTML = "";
+    if (students.length === 0) {
+        select.innerHTML = `<option value="">Chưa có dữ liệu sinh viên</option>`;
+        return;
+    }
     students.forEach(s => {
         select.innerHTML += `<option value="${s.mssv}">${s.mssv} - ${s.hoTen} (${s.maPhong})</option>`;
     });
 }
 
-function renderKyLuat() {
+function renderViolations() {
     const body = document.getElementById("kl-table-body");
-    if(!body) return;
+    if (!body) return;
     body.innerHTML = "";
-    getKyLuat().forEach((k, idx) => {
+    const list = getViolations();
+
+    if (list.length === 0) {
+        body.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8;">Sổ kỷ luật trống</td></tr>`;
+        return;
+    }
+
+    list.forEach((k, idx) => {
         body.innerHTML += `
             <tr>
                 <td>${k.mssv}</td>
                 <td><b>${k.hoTen}</b></td>
-                <td><span style="background:#fef3c7;color:#92400e;padding:3px 6px;border-radius:4px;">${k.maPhong}</span></td>
+                <td><span style="background:#fee2e2; color:#991b1b; padding:3px 6px; border-radius:4px; font-weight:bold;">${k.maPhong}</span></td>
                 <td>${k.ngay}</td>
-                <td style="color:#ef4444;font-weight:500;">${k.loi}</td>
-                <td><button class="btn" style="padding:4px 8px;font-size:11px;" onclick="xoaKL(${idx})">Hủy biên bản</button></td>
+                <td><b style="color:#dc2626;">${k.loi}</b></td>
+                <td>
+                    <button class="btn" style="background:#ef4444; padding:4px 8px; font-size:11px;" onclick="xoaKyLuat(${idx})">Xóa</button>
+                </td>
             </tr>`;
     });
 }
@@ -39,26 +53,27 @@ function themKyLuat() {
     const ngay = document.getElementById("kl-ngay").value;
     const loi = document.getElementById("kl-loi").value;
 
-    if(!ngay) { alert("Vui lòng chọn ngày vi phạm!"); return; }
-    
-    const students = JSON.parse(localStorage.getItem("sinhVienData")) || [];
-    const svTarget = students.find(s => s.mssv === mssv);
-    
-    if(!svTarget) { alert("Dữ liệu sinh viên không hợp lệ!"); return; }
+    if (!mssv) { alert("Vui lòng thêm sinh viên trước khi lập biên bản!"); return; }
+    if (!ngay) { alert("Vui lòng chọn ngày vi phạm!"); return; }
 
-    const kl = getKyLuat();
-    kl.push({ mssv, hoTen: svTarget.hoTen, maPhong: svTarget.maPhong, ngay, loi });
-    localStorage.setItem("kyLuatData", JSON.stringify(kl));
-    renderKyLuat();
-    alert("Đã ghi nhận vi phạm!");
+    const students = JSON.parse(localStorage.getItem("sinhVienData")) || [];
+    const sv = students.find(s => s.mssv === mssv);
+
+    const list = getViolations();
+    list.push({ mssv, hoTen: sv.hoTen, maPhong: sv.maPhong, ngay, loi });
+    localStorage.setItem("kyLuatData", JSON.stringify(list));
+
+    document.getElementById("kl-ngay").value = "";
+    renderViolations();
+    alert("Đã lập biên bản vi phạm kỷ luật thành công!");
 }
 
-function xoaKL(idx) {
-    if(confirm("Xóa lỗi vi phạm này?")) {
-        const kl = getKyLuat().filter((_, i) => i !== idx);
-        localStorage.setItem("kyLuatData", JSON.stringify(kl));
-        renderKyLuat();
+function xoaKyLuat(idx) {
+    if (confirm("Xóa biên bản vi phạm này khỏi hệ thống?")) {
+        const list = getViolations().filter((_, i) => i !== idx);
+        localStorage.setItem("kyLuatData", JSON.stringify(list));
+        renderViolations();
     }
 }
 
-window.onload = function() { loadKlStudents(); renderKyLuat(); }
+window.onload = function() { loadKlStudents(); renderViolations(); }

@@ -1,90 +1,73 @@
 if (!localStorage.getItem("hoaDonData")) {
-    const danhSachHDMau = [
-        { maPhong: "A101", thang: "2026-06", tienDien: 150000, tienNuoc: 80000, trangThai: "Chưa thanh toán" },
-        { maPhong: "A102", thang: "2026-06", tienDien: 210000, tienNuoc: 95000, trangThai: "Đã thanh toán" }
+    const mauHD = [
+        { maPhong: "A101", tien: "1250000", trangThai: "Chưa thanh toán" },
+        { maPhong: "A102", tien: "950000", trangThai: "Đã thanh toán" }
     ];
-    localStorage.setItem("hoaDonData", JSON.stringify(danhSachHDMau));
+    localStorage.setItem("hoaDonData", JSON.stringify(mauHD));
 }
 
 function getBills() { return JSON.parse(localStorage.getItem("hoaDonData")) || []; }
 
-function loadBillRoomSelect() {
-    const selectPhong = document.getElementById("bill-maPhong");
-    if (!selectPhong) return;
-    const phongData = JSON.parse(localStorage.getItem("phongData")) || [
-        { maPhong: "A101" }, { maPhong: "A102" }, { maPhong: "B201" }
-    ];
-    selectPhong.innerHTML = "";
-    phongData.forEach(p => {
-        selectPhong.innerHTML += `<option value="${p.maPhong}">${p.maPhong}</option>`;
-    });
+function loadRoomsToSelect() {
+    const select = document.getElementById("hd-phong");
+    if (!select) return;
+    const rooms = JSON.parse(localStorage.getItem("phongData")) || [];
+    select.innerHTML = "";
+    rooms.forEach(r => select.innerHTML += `<option value="${r.maPhong}">${r.maPhong}</option>`);
 }
 
 function renderBills() {
-    const billTableBody = document.getElementById("bill-table-body");
-    if (!billTableBody) return;
-
-    const bills = getBills();
-    billTableBody.innerHTML = "";
-
-    bills.forEach((bill, index) => {
-        const tongTien = parseInt(bill.tienDien) + parseInt(bill.tienNuoc);
-        const statusClass = bill.trangThai === "Đã thanh toán" ? "badge-paid" : "badge-unpaid";
-        
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td><b>${bill.maPhong}</b></td>
-            <td>${bill.thang}</td>
-            <td>${parseInt(bill.tienDien).toLocaleString()} đ</td>
-            <td>${parseInt(bill.tienNuoc).toLocaleString()} đ</td>
-            <td><b style="color: #2563eb;">${tongTien.toLocaleString()} đ</b></td>
-            <td><span class="badge ${statusClass}">${bill.trangThai}</span></td>
-            <td>
-                ${bill.trangThai === "Chưa thanh toán" 
-                    ? `<button class="btn" style="background-color: #10b981; padding: 5px 10px; font-size: 12px;" onclick="payBill(${index})">Thanh toán</button>` 
-                    : `<span style="color: #64748b; font-size: 12px;">Đóng đủ</span>`
-                }
-            </td>
-        `;
-        billTableBody.appendChild(row);
+    const body = document.getElementById("hd-table-body");
+    if (!body) return;
+    body.innerHTML = "";
+    
+    getBills().forEach((b, idx) => {
+        const cls = b.trangThai === "Đã thanh toán" ? "badge-paid" : "badge-unpaid";
+        body.innerHTML += `
+            <tr>
+                <td><b>${b.maPhong}</b></td>
+                <td><b style="color:#b45309;">${parseInt(b.tien).toLocaleString()} đ</b></td>
+                <td><span class="badge ${cls}">${b.trangThai}</span></td>
+                <td>
+                    ${b.trangThai === "Chưa thanh toán" 
+                        ? `<button class="btn" style="background:#10b981; padding:4px 8px; font-size:11px;" onclick="thanhToanHD(${idx})">Thanh Toán</button>` 
+                        : `<span style="color:#64748b; font-size:12px;">Hoàn thành</span>`
+                    }
+                    <button class="btn" style="background:#ef4444; padding:4px 8px; font-size:11px; margin-left:5px;" onclick="xoaHD(${idx})">Xóa</button>
+                </td>
+            </tr>`;
     });
 }
 
-function lapHoaDon() {
-    const maPhong = document.getElementById("bill-maPhong").value;
-    const thang = document.getElementById("bill-thang").value;
-    const tienDien = document.getElementById("tienDien").value;
-    const tienNuoc = document.getElementById("tienNuoc").value;
+function themHoaDon() {
+    const maPhong = document.getElementById("hd-phong").value;
+    const tien = document.getElementById("hd-tien").value.trim();
 
-    if (!thang || !tienDien || !tienNuoc) {
-        alert("Vui lòng điền đủ thông tin hóa đơn!");
-        return;
-    }
+    if (!maPhong || !tien) { alert("Vui lòng điền số tiền!"); return; }
 
-    const bills = getBills();
-    if (bills.some(b => b.maPhong === maPhong && b.thang === thang)) {
-        alert(`Phòng ${maPhong} đã có hóa đơn tháng ${thang}!`);
-        return;
-    }
+    const list = getBills();
+    list.push({ maPhong, tien, trangThai: "Chưa thanh toán" });
+    localStorage.setItem("hoaDonData", JSON.stringify(list));
 
-    bills.push({ maPhong, thang, tienDien, tienNuoc, trangThai: "Chưa thanh toán" });
-    localStorage.setItem("hoaDonData", JSON.stringify(bills));
-    
-    document.getElementById("tienDien").value = "";
-    document.getElementById("tienNuoc").value = "";
+    document.getElementById("hd-tien").value = "";
     renderBills();
-    alert("Lập hóa đơn thành công!");
+    alert("Tạo hóa đơn tháng thành công!");
 }
 
-function payBill(index) {
-    const bills = getBills();
-    bills[index].trangThai = "Đã thanh toán";
-    localStorage.setItem("hoaDonData", JSON.stringify(bills));
+function thanhToanHD(idx) {
+    const list = getBills();
+    list[idx].trangThai = "Đã thanh toán";
+    localStorage.setItem("hoaDonData", JSON.stringify(list));
     renderBills();
-    alert("Thanh toán thành công!");
+    alert("Cập nhật trạng thái thanh toán thành công!");
 }
 
-window.onload = function() {
-    loadBillRoomSelect();
-    renderBills();
-};
+function xoaHD(idx) {
+    if (confirm("Xóa hóa đơn này?")) {
+        const list = getBills().filter((_, i) => i !== idx);
+        localStorage.setItem("hoaDonData", JSON.stringify(list));
+        renderBills();
+    }
+}
+
+window.onload = function() { loadRoomsToSelect(); renderBills(); }

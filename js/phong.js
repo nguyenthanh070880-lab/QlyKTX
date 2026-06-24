@@ -1,75 +1,58 @@
 if (!localStorage.getItem("phongData")) {
-    const danhSachPhongMau = [
-        { maPhong: "A101", loaiPhong: "6 Giường" },
-        { maPhong: "A102", loaiPhong: "6 Giường" },
-        { maPhong: "B201", loaiPhong: "4 Giường" }
+    const mauPhong = [
+        { maPhong: "A101", loaiPhong: "4 Giường", sucChua: 4 },
+        { maPhong: "A102", loaiPhong: "6 Giường", sucChua: 6 }
     ];
-    localStorage.setItem("phongData", JSON.stringify(danhSachPhongMau));
+    localStorage.setItem("phongData", JSON.stringify(mauPhong));
 }
 
 function getRooms() { return JSON.parse(localStorage.getItem("phongData")) || []; }
-function getStudents() { return JSON.parse(localStorage.getItem("sinhVienData")) || []; }
 
 function renderRooms() {
-    const roomTableBody = document.getElementById("room-table-body");
-    if (!roomTableBody) return;
+    const body = document.getElementById("phong-table-body");
+    if (!body) return;
+    body.innerHTML = "";
+    const list = getRooms();
 
-    const rooms = getRooms();
-    const students = getStudents();
-    roomTableBody.innerHTML = "";
-
-    rooms.forEach(room => {
-        // TỰ ĐỘNG ĐẾM SỐ SINH VIÊN THUỘC PHÒNG NÀY
-        const soNguoiThucTe = students.filter(sv => sv.maPhong === room.maPhong).length;
-        const sucChuaToiDa = parseInt(room.loaiPhong) || 6;
-
-        let trangThai = "Còn trống";
-        let statusClass = "badge-success";
-        if (soNguoiThucTe >= sucChuaToiDa) {
-            trangThai = "Đã đầy";
-            statusClass = "badge-danger";
-        }
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td><b>${room.maPhong}</b></td>
-            <td>${room.loaiPhong}</td>
-            <td><b style="color: #2563eb;">${soNguoiThucTe}</b> / ${sucChuaToiDa} thành viên</td>
-            <td><span class="badge ${statusClass}">${trangThai}</span></td>
-            <td><button class="btn btn-delete" onclick="xoaPhong('${room.maPhong}')">Xóa</button></td>
-        `;
-        roomTableBody.appendChild(row);
+    list.forEach((r, idx) => {
+        body.innerHTML += `
+            <tr>
+                <td><b>${r.maPhong}</b></td>
+                <td>${r.loaiPhong}</td>
+                <td>${r.sucChua} Người</td>
+                <td>
+                    <button class="btn" style="background:#ef4444; padding:4px 8px; font-size:11px;" onclick="xoaPhong(${idx})">Xóa</button>
+                </td>
+            </tr>`;
     });
 }
 
 function themPhong() {
-    const maPhong = document.getElementById("maPhong").value.trim().toUpperCase();
-    const loaiPhong = document.getElementById("loaiPhong").value;
+    const maPhong = document.getElementById("p-maPhong").value.trim().toUpperCase();
+    const loaiPhong = document.getElementById("p-loaiPhong").value;
+    let sucChua = 4;
+    if (loaiPhong === "6 Giường") sucChua = 6;
+    if (loaiPhong === "8 Giường") sucChua = 8;
 
-    if (!maPhong) {
-        alert("Vui lòng nhập mã phòng!");
-        return;
-    }
+    if (!maPhong) { alert("Vui lòng nhập mã phòng!"); return; }
 
-    const rooms = getRooms();
-    if (rooms.some(r => r.maPhong === maPhong)) {
-        alert("Mã phòng này đã tồn tại!");
-        return;
-    }
+    const list = getRooms();
+    if (list.some(r => r.maPhong === maPhong)) { alert("Mã phòng này đã tồn tại!"); return; }
 
-    rooms.push({ maPhong, loaiPhong });
-    localStorage.setItem("phongData", JSON.stringify(rooms));
-    document.getElementById("maPhong").value = "";
+    list.push({ maPhong, loaiPhong, sucChua });
+    localStorage.setItem("phongData", JSON.stringify(list));
+
+    document.getElementById("p-maPhong").value = "";
     renderRooms();
-    alert("Thêm phòng thành công!");
+    alert("Thêm phòng mới thành công!");
 }
 
-function xoaPhong(maPhong) {
-    if (confirm(`Xóa phòng ${maPhong}?`)) {
-        let rooms = getRooms().filter(r => r.maPhong !== maPhong);
-        localStorage.setItem("phongData", JSON.stringify(rooms));
+function xoaPhong(idx) {
+    if (confirm("Xóa phòng này có thể ảnh hưởng đến dữ liệu sinh viên ở trong phòng. Bạn vẫn muốn xóa chứ?")) {
+        const list = getRooms().filter((_, i) => i !== idx);
+        localStorage.setItem("phongData", JSON.stringify(list));
         renderRooms();
     }
 }
 
-window.onload = function() { renderRooms(); };
+window.onload = function() { renderRooms(); }
