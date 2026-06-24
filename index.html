@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTX Yersin - Tổng Quan Hệ Thống</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #2563eb;
+        }
+        .card-room { border-left-color: #10b981; }
+        .card-bill { border-left-color: #f59e0b; }
+        .card h3 { color: #64748b; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
+        .card p { font-size: 28px; font-weight: bold; color: #1e293b; }
+        .welcome-box {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">
+            <h3>KTX ĐH YERSIN</h3>
+        </div>
+        <ul>
+            <li><a href="index.html" class="active">📊 Tổng Quan</a></li>
+            <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
+            <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-box">
+            <h2>Chào mừng đến với Hệ thống Quản lý KTX Đại học Yersin</h2>
+            <p style="margin-top: 10px; opacity: 0.9;">Hệ thống hỗ trợ theo dõi sinh viên nội trú, tình trạng phòng ở và lập hóa đơn nhanh chóng.</p>
+        </div>
+
+        <div class="header">
+            <h2>Số Liệu Thống Kê Nhanh</h2>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Tổng số sinh viên</h3>
+                <p id="total-students">2</p>
+            </div>
+            <div class="card card-room">
+                <h3>Tổng số phòng</h3>
+                <p id="total-rooms">3</p>
+            </div>
+            <div class="card card-bill">
+                <h3>Hóa đơn chưa thu</h3>
+                <p id="unpaid-bills">1</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Đoạn code nhỏ tự động lấy số liệu từ LocalStorage hiển thị lên màn hình chính
+        window.onload = function() {
+            const sv = JSON.parse(localStorage.getItem("sinhVienData")) || [];
+            const phong = JSON.parse(localStorage.getItem("phongData")) || [];
+            const hoadon = JSON.parse(localStorage.getItem("hoaDonData")) || [];
+            
+            if(sv.length > 0) document.getElementById("total-students").innerText = sv.length;
+            if(phong.length > 0) document.getElementById("total-rooms").innerText = phong.length;
+            
+            const unpaid = hoadon.filter(b => b.trangThai === "Chưa thanh toán").length;
+            document.getElementById("unpaid-bills").innerText = unpaid;
+        }
+    </script>
+</body>
+</html>
