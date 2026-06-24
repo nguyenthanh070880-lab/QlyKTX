@@ -4,7 +4,7 @@ if (!localStorage.getItem("kyLuatData")) {
     ];
     localStorage.setItem("kyLuatData", JSON.stringify(mauKL));
 }
-
+// Giữ nguyên logic lập biên bản kỷ luật cũ của bồ...
 function getViolations() { return JSON.parse(localStorage.getItem("kyLuatData")) || []; }
 
 // Đổ danh sách sinh viên vào ô Select để chọn khi lập biên bản

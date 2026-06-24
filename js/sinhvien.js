@@ -4,6 +4,7 @@ if (!localStorage.getItem("sinhVienData")) {
     ];
     localStorage.setItem("sinhVienData", JSON.stringify(mauSV));
 }
+// Các hàm xử lý CRUD sinh viên của bồ giữ nguyên ở dưới...
 function getStudents() { return JSON.parse(localStorage.getItem("sinhVienData")) || []; }
 function getRooms() { return JSON.parse(localStorage.getItem("phongData")) || []; }
 

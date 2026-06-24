@@ -12,34 +12,59 @@
         <ul>
             <li><a href="index.html">📊 Tổng Quan</a></li>
             <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="hososv.html">📋 Hồ Sơ Chi Tiết</a></li>
             <li><a href="phong.html" class="active">🏢 Quản Lý Phòng Ở</a></li>
             <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
             <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
             <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
             <li><a href="guixe.html">🏍️ Quản Lý Gửi Xe</a></li>
             <li><a href="buukien.html">📦 Nhận Bưu Kiện</a></li>
+            <li><a href="khieunai.html">💬 Ý Kiến & Khiếu Nại</a></li>
+            <li><a href="chuyenphong.html">🔄 Chuyển & Trả Phòng</a></li>
+            <li><a href="hethong.html">⚙️ Hệ Thống & Bảo Mật</a></li>
         </ul>
     </div>
+
     <div class="main-content">
         <div class="header">
-            <h2>Danh Sách Phòng Ký Túc Xá</h2>
-            <p>Theo dõi tình trạng chỗ trống và loại phòng</p>
+            <h2>Quản Lý Danh Sách Phòng Ở</h2>
+            <p>Thêm phòng mới, quản lý loại phòng và định giá tiền phòng nội trú</p>
         </div>
-        <div class="form-container" style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom:25px;">
-            <h3>Thêm phòng mới</h3>
-            <div style="margin-top:15px; display:flex; flex-wrap:wrap; gap:15px;">
-                <input type="text" id="p-maPhong" placeholder="Mã phòng (VD: A103)" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:180px;">
-                <select id="p-loaiPhong" style="padding:8px 12px; border:1px solid #cbd5e1; border-radius:4px; width:150px;">
-                    <option value="4 Giường">4 Giường</option>
-                    <option value="6 Giường">6 Giường</option>
-                    <option value="8 Giường">8 Giường</option>
-                </select>
-                <button class="btn" onclick="themPhong()" style="padding:9px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; color:#fff; background-color:#10b981;">Thêm Phòng</button>
+
+        <div class="form-container">
+            <h3>Thêm phòng ở mới vào hệ thống</h3>
+            <div style="margin-top: 15px;">
+                <div style="display:inline-block; margin-right:15px; margin-bottom:15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:600; font-size:14px;">Mã Số Phòng</label>
+                    <input type="text" id="p-maphong" placeholder="Ví dụ: A101, A102">
+                </div>
+                <div style="display:inline-block; margin-right:15px; margin-bottom:15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:600; font-size:14px;">Loại Phòng</label>
+                    <select id="p-loaiphong">
+                        <option value="Phòng 4 Người">Phòng 4 Người</option>
+                        <option value="Phòng 6 Người">Phòng 6 Người</option>
+                        <option value="Phòng VIP 2 Người">Phòng VIP 2 Người</option>
+                    </select>
+                </div>
+                <div style="display:inline-block; margin-right:15px; margin-bottom:15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:600; font-size:14px;">Giá Tiền Phòng (đ/Tháng)</label>
+                    <input type="number" id="p-gia" placeholder="Ví dụ: 400000">
+                </div>
+                <button type="button" class="btn" onclick="themPhong()" style="background-color:#10b981;">Thêm Phòng</button>
             </div>
         </div>
+
         <div class="table-container">
+            <h3>Danh sách sơ đồ phòng KTX hiện tại</h3>
             <table>
-                <thead><tr><th>Mã Phòng</th><th>Loại Phòng</th><th>Sức Chứa</th><th>Hành Động</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Mã Phòng</th>
+                        <th>Loại Cấu Trúc</th>
+                        <th>Giá Tiền / Tháng</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
                 <tbody id="phong-table-body"></tbody>
             </table>
         </div>

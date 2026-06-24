@@ -4,7 +4,7 @@ if (!localStorage.getItem("guiXeData")) {
     ];
     localStorage.setItem("guiXeData", JSON.stringify(mauXe));
 }
-
+// Các hàm render, thêm xe cũ của bồ viết tiếp bên dưới...
 function getBikes() { return JSON.parse(localStorage.getItem("guiXeData")) || []; }
 
 function loadBikeStudents() {

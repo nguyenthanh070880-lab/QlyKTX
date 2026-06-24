@@ -19,7 +19,6 @@ function renderComplaints() {
     const body = document.getElementById("kn-table-body");
     if (!body) return;
     body.innerHTML = "";
-
     getComplaints().forEach((c, idx) => {
         const cls = c.trangThai === "Chưa xử lý" ? "badge-pending" : "badge-success";
         body.innerHTML += `
@@ -40,16 +39,13 @@ function renderComplaints() {
 function themKhieuNai() {
     const maPhong = document.getElementById("kn-phong").value;
     const noiDung = document.getElementById("kn-noidung").value.trim();
-
     if (!noiDung) { alert("Vui lòng ghi nội dung phản ánh!"); return; }
-
     const list = getComplaints();
     list.push({ maPhong, noiDung, trangThai: "Chưa xử lý" });
     localStorage.setItem("khieuNaiData", JSON.stringify(list));
-
     document.getElementById("kn-noidung").value = "";
     renderComplaints();
-    alert("Gửi ý kiến phản ánh lên Ban quản lý thành công!");
+    alert("Gửi ý kiến phản ánh thành công!");
 }
 
 function giaiQuyetKN(idx) {
@@ -57,7 +53,5 @@ function giaiQuyetKN(idx) {
     list[idx].trangThai = "Đã xử lý";
     localStorage.setItem("khieuNaiData", JSON.stringify(list));
     renderComplaints();
-    alert("Đã xác nhận xử lý thành công khiếu nại này!");
 }
-
 window.onload = function() { loadRoomsToSelect(); renderComplaints(); }

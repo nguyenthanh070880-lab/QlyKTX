@@ -29,6 +29,7 @@
         <ul>
             <li><a href="index.html" class="active">📊 Tổng Quan</a></li>
             <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="hososv.html">📋 Hồ Sơ Chi Tiết</a></li>
             <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
             <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
             <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
@@ -81,7 +82,6 @@
 
     <script>
         window.onload = function() {
-            // Kiểm tra phân quyền đăng nhập trước khi xem trang chủ
             const user = JSON.parse(sessionStorage.getItem("currentUser"));
             if(!user) {
                 alert("Vui lòng đăng nhập hệ thống!");
@@ -99,7 +99,6 @@
             const khieunai = JSON.parse(localStorage.getItem("khieuNaiData")) || [];
             const chuyenphong = JSON.parse(localStorage.getItem("chuyenPhongData")) || [];
 
-            // Gán số lượng
             document.getElementById("total-students").innerText = sv.length;
             document.getElementById("total-rooms").innerText = phong.length;
             document.getElementById("unpaid-bills").innerText = hoadon.filter(b => b.trangThai === "Chưa thanh toán").length;
@@ -110,7 +109,6 @@
             document.getElementById("pending-complaints").innerText = khieunai.filter(c => c.trangThai === "Chưa xử lý").length;
             document.getElementById("pending-moves").innerText = chuyenphong.filter(m => m.trangThai === "Chờ duyệt").length;
 
-            // Render 3 sinh viên mới nhất
             const recentSvBody = document.getElementById("recent-students");
             if(sv.length === 0) {
                 recentSvBody.innerHTML = "<tr><td colspan='3' style='text-align:center;color:#94a3b8;'>Chưa có sinh viên</td></tr>";
@@ -120,7 +118,6 @@
                 });
             }
 
-            // Render 3 khiếu nại mới nhất
             const complaintBody = document.getElementById("recent-complaints");
             if(khieunai.length === 0) {
                 complaintBody.innerHTML = "<tr><td colspan='3' style='text-align:center;color:#94a3b8;'>Không có khiếu nại mới</td></tr>";

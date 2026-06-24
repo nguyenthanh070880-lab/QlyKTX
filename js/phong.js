@@ -1,7 +1,7 @@
 if (!localStorage.getItem("phongData")) {
     const mauPhong = [
-        { maPhong: "A101", loaiPhong: "4 Giường", sucChua: 4 },
-        { maPhong: "A102", loaiPhong: "6 Giường", sucChua: 6 }
+        { maPhong: "A101", loaiPhong: "Phòng 4 Người", giaPhong: 400000 },
+        { maPhong: "A102", loaiPhong: "Phòng 6 Người", giaPhong: 300000 }
     ];
     localStorage.setItem("phongData", JSON.stringify(mauPhong));
 }
@@ -10,49 +10,41 @@ function getRooms() { return JSON.parse(localStorage.getItem("phongData")) || []
 
 function renderRooms() {
     const body = document.getElementById("phong-table-body");
-    if (!body) return;
-    body.innerHTML = "";
-    const list = getRooms();
-
-    list.forEach((r, idx) => {
+    if (!body) return; body.innerHTML = "";
+    getRooms().forEach((p, idx) => {
         body.innerHTML += `
             <tr>
-                <td><b>${r.maPhong}</b></td>
-                <td>${r.loaiPhong}</td>
-                <td>${r.sucChua} Người</td>
-                <td>
-                    <button class="btn" style="background:#ef4444; padding:4px 8px; font-size:11px;" onclick="xoaPhong(${idx})">Xóa</button>
-                </td>
+                <td><b>${p.maPhong}</b></td>
+                <td>${p.loaiPhong}</td>
+                <td><b style="color:#059669;">${Number(p.giaPhong).toLocaleString()} đ</b></td>
+                <td><button class="btn" style="background:#ef4444; padding:4px 8px; font-size:11px;" onclick="xoaPhong(${idx})">Xóa</button></td>
             </tr>`;
     });
 }
 
 function themPhong() {
-    const maPhong = document.getElementById("p-maPhong").value.trim().toUpperCase();
-    const loaiPhong = document.getElementById("p-loaiPhong").value;
-    let sucChua = 4;
-    if (loaiPhong === "6 Giường") sucChua = 6;
-    if (loaiPhong === "8 Giường") sucChua = 8;
+    const maPhong = document.getElementById("p-maphong").value.trim().toUpperCase();
+    const loaiPhong = document.getElementById("p-loaiphong").value;
+    const giaPhong = parseInt(document.getElementById("p-gia").value) || 0;
 
-    if (!maPhong) { alert("Vui lòng nhập mã phòng!"); return; }
-
+    if (!maPhong || giaPhong <= 0) { alert("Vui lòng điền mã phòng và giá phòng hợp lệ!"); return; }
     const list = getRooms();
-    if (list.some(r => r.maPhong === maPhong)) { alert("Mã phòng này đã tồn tại!"); return; }
+    if (list.some(p => p.maPhong === maPhong)) { alert("Mã phòng này đã tồn tại trên hệ thống!"); return; }
 
-    list.push({ maPhong, loaiPhong, sucChua });
+    list.push({ maPhong, loaiPhong, giaPhong });
     localStorage.setItem("phongData", JSON.stringify(list));
-
-    document.getElementById("p-maPhong").value = "";
+    document.getElementById("p-maphong").value = "";
+    document.getElementById("p-gia").value = "";
     renderRooms();
     alert("Thêm phòng mới thành công!");
 }
 
 function xoaPhong(idx) {
-    if (confirm("Xóa phòng này có thể ảnh hưởng đến dữ liệu sinh viên ở trong phòng. Bạn vẫn muốn xóa chứ?")) {
-        const list = getRooms().filter((_, i) => i !== idx);
+    if (confirm("Bạn có chắc chắn muốn xóa phòng này không?")) {
+        const list = getRooms();
+        list.splice(idx, 1);
         localStorage.setItem("phongData", JSON.stringify(list));
         renderRooms();
     }
 }
-
 window.onload = function() { renderRooms(); }
