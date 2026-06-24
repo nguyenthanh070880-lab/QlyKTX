@@ -1,6 +1,6 @@
 if (!localStorage.getItem("buuKienData")) {
     const mauBK = [
-        { mssv: "2401010249", hoTen: "Đỗ Đặng Hữu Quốc", maPhong: "A102", maVanDon: "SPX99881122", dv: "Shopee Xpress", trangThai: "Chờ lấy" }
+        { mssv: "2401010006", hoTen: "Lê Văn A", maPhong: "A102", maVanDon: "SPX99881122", dv: "Shopee Xpress", trangThai: "Chờ lấy" }
     ];
     localStorage.setItem("buuKienData", JSON.stringify(mauBK));
 }
