@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTX Yersin - Quản Lý Hồ Sơ Dự Án</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+        .form-group-full { grid-column: 1 / -1; }
+        .form-grid label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #334155; }
+        .form-grid input, .form-grid select, .form-grid textarea { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><h3>KTX ĐH YERSIN</h3></div>
+        <ul>
+            <li><a href="index.html">📊 Tổng Quan</a></li>
+            <li><a href="sinhvien.html">👥 Quản Lý Sinh Viên</a></li>
+            <li><a href="hososv.html">📋 Hồ Sơ Chi Tiết</a></li>
+            <li><a href="quanlyhoso.html" class="active">📁 Quản Lý Hồ Sơ KTX</a></li>
+            <li><a href="phong.html">🏢 Quản Lý Phòng Ở</a></li>
+            <li><a href="hoadon.html">🧾 Điện Nước & Hóa Đơn</a></li>
+            <li><a href="taisan.html">🛠️ Cơ Sở Vật Chất</a></li>
+            <li><a href="kyluat.html">🚨 Quản Lý Kỷ Luật</a></li>
+            <li><a href="guixe.html">🏍️ Quản Lý Gửi Xe</a></li>
+            <li><a href="buukien.html">📦 Nhận Bưu Kiện</a></li>
+            <li><a href="khieunai.html">💬 Ý Kiến & Khiếu Nại</a></li>
+            <li><a href="chuyenphong.html">🔄 Chuyển & Trả Phòng</a></li>
+            <li><a href="hethong.html">⚙️ Hệ Thống & Bảo Mật</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h2>Hệ Thống Tiếp Nhận & Quản Lý Hồ Sơ Dự Án</h2>
+            <p>Quản lý trạng thái, lý do trả và xuất văn bản thông báo trả hồ sơ trực tiếp (.doc)</p>
+        </div>
+
+        <div class="form-container">
+            <h3 id="form-title">📥 Nhập thông tin hồ sơ dự án mới</h3>
+            <input type="hidden" id="hs-edit-idx" value="-1">
+            
+            <div class="form-grid">
+                <div>
+                    <label>Mã Số</label>
+                    <input type="text" id="hs-ma" placeholder="Ví dụ: MS-0123">
+                </div>
+                <div>
+                    <label>Hộp Số</label>
+                    <input type="text" id="hs-hop" placeholder="Ví dụ: HOP-A5">
+                </div>
+                <div>
+                    <label>Loại Hình Dự Án</label>
+                    <input type="text" id="hs-loaihinh" placeholder="Ví dụ: Công nghệ thông tin, Môi trường">
+                </div>
+                <div>
+                    <label>Tên Chủ Dự Án</label>
+                    <input type="text" id="hs-chudaon" placeholder="Ví dụ: Công ty TNHH Giải Pháp Phần Mềm">
+                </div>
+                <div class="form-group-full">
+                    <label>Địa Chỉ Liên Hệ & Điện Thoại</label>
+                    <input type="text" id="hs-lienhe" placeholder="Ví dụ: 27 Tôn Thất Tùng, Đà Lạt - ĐT: 0912345678">
+                </div>
+                <div class="form-group-full">
+                    <label>Tên Dự Án</label>
+                    <input type="text" id="hs-tenduan" placeholder="Ví dụ: Dự án xây dựng hệ thống phần mềm quản lý nội trú thông minh">
+                </div>
+                <div class="form-group-full">
+                    <label>Địa Chỉ Thực Hiện Dự Án</label>
+                    <input type="text" id="hs-diachithuchien" placeholder="Ví dụ: Trường Đại học Yersin Đà Lạt, Lâm Đồng">
+                </div>
+                <div class="form-group-full">
+                    <label>Quy Mô, Công Suất</label>
+                    <input type="text" id="hs-quymo" placeholder="Ví dụ: Phục vụ 2,000 sinh viên, công suất xử lý 24/7">
+                </div>
+                <div class="form-group-full">
+                    <label style="color: #ef4444;">Lý Do Trả Hồ Sơ (Nếu có)</label>
+                    <textarea id="hs-lydotra" placeholder="Ghi rõ lý do hồ sơ bị trả lại hoặc chưa đạt yêu cầu duyệt..." rows="3"></textarea>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button type="button" id="btn-submit-hs" class="btn" onclick="luuHoSoPro()" style="background-color:#2563eb;">Lưu Hồ Sơ</button>
+                <button type="button" id="btn-cancel-hs" class="btn" onclick="huyCheDoSuaPro()" style="background-color:#64748b; display:none; margin-left:10px;">Hủy Chỉnh Sửa</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h3>📁 Danh mục theo dõi trạng thái hồ sơ</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã/Hộp Số</th>
+                        <th>Tên Dự Án / Chủ Đầu Tư</th>
+                        <th>Loại Hình</th>
+                        <th>Quy Mô</th>
+                        <th>Lý Do Trả</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="hoso-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="js/quanlyhoso.js"></script>
+</body>
+</html>
